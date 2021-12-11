@@ -23,6 +23,8 @@
         $(document).ready(function () {
             var validationSuccess = $("#validation-success");
 
+
+
             $("#exampleform").kendoForm({
                 orientation: "vertical",
                 formData: {
@@ -81,8 +83,12 @@
                                     content: "<p>A new version of <strong>Kendo UI</strong> is available. Would you like to download and install it now?<p>",
                                     actions: [
                                         { text: 'Install update', primary: true }
-                                    ]
+                                    ],
+                                    close:  function(e) {
+                                        $('#dialog').removeClass();
+                                    }
                                 });
+                            dialog.data("kendoDialog").open();
                             }
                         });
                 },
