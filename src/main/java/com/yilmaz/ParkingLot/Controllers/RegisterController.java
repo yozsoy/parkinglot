@@ -33,7 +33,7 @@ public class RegisterController {
     private double initialPrice;
 
     @Value("${weight.capacity.per.floor}")
-    private int weightCapacityPerFloor;
+    private int[] weightCapacitiesOfTheFloors;
 
     @Value("${height.of.the.floors}")
     private int[] heightsOfTheFloors;
@@ -112,7 +112,7 @@ public class RegisterController {
             Set<Spot> spotsInTheFloor = findByFloor(allFilledSpots, floorNumber);
 
             //check weight
-            if(!doesFloorSatisfyWeightRequirement(vehicle, spotsInTheFloor))
+            if(!doesFloorSatisfyWeightRequirement(vehicle, spotsInTheFloor, floorNumber))
                 continue;
 
             //check height
@@ -135,8 +135,8 @@ public class RegisterController {
         }
         return null;
     }
-    private boolean doesFloorSatisfyWeightRequirement(Vehicle incomingVehicle, Set<Spot> existingSpots){
-        double remainingWeight = weightCapacityPerFloor - incomingVehicle.getWeight();
+    private boolean doesFloorSatisfyWeightRequirement(Vehicle incomingVehicle, Set<Spot> existingSpots, int floorNumber){
+        double remainingWeight = weightCapacitiesOfTheFloors[floorNumber] - incomingVehicle.getWeight();
         for(Spot spot: existingSpots){
             remainingWeight -= spot.getWeight();
         }
