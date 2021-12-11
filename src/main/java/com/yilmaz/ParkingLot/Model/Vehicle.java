@@ -5,7 +5,9 @@ import lombok.Data;
 
 @Data
 public class Vehicle {
+    private String plateNumber;
     private double height;
     private double weight;
     private SpotType size;
+    private boolean agree;
 }

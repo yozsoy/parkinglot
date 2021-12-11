@@ -27,28 +27,33 @@
                 orientation: "vertical",
                 formData: {
                     PlateNumber: "34KLM201",
-                    Weight: "150 Kg",
-                    Height: "120 Cm",
-                    Birth: new Date(),
+                    Weight: "150",
+                    Height: "120",
                     Agree: false
                 },
                 items: [{
                     type: "group",
-                    label: "Vecile Accepting Form",
+                    label: "Vehicle Accepting Form",
                     items: [
                         { field: "PlateNumber", label: "Plate Number:", validation: { required: true } },
-                        { field: "Weight", label: "Weight:", validation: { required: true, email: true } },
-                        { field: "Height", label: "Height:", validation: { required: true, email: true } },
+                        { field: "Weight", label: "Weight (KG):", validation: { required: true} },
+                        { field: "Height", label: "Height (CM):", validation: { required: true} },
                         {
-                            field: "Password",
-                            label: "Password:",
+                            field: "size",
+                            editor: "DropDownList",
+                            label: "Vehicle Size",
                             validation: { required: true },
-                            hint: "Hint: enter alphanumeric characters only.",
-                            editor: function(container, options) {
-                                container.append($("<input type='password' class='k-textbox k-valid' id='Password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:Password' aria-describedby='Password-form-hint'>"));
-                            }
+                            editorOptions:
+                                {
+                                    optionLabel: "Select size...",
+                                    dataSource: [
+                                        { Name: "Small"},
+                                        { Name: "Big"}
+                                    ],
+                                    dataTextField: "Name",
+                                    dataValueField: "Name"
+                                }
                         },
-                        { field: "Birth", label: { text: "Date of birth:", optional: true } },
                         { field: "Agree", label: "Agree to Terms:", validation: { required: true } }
                     ]
                 }],
@@ -58,6 +63,19 @@
                 submit: function(e) {
                     e.preventDefault();
                     validationSuccess.html("<div class='k-messagebox k-messagebox-success'>Form data is valid!</div>");
+
+
+                    $.ajax({
+                        type: "GET",
+                        url: '/register',
+                        data: e.model,
+                        success: function (data) {
+                            //data is array of grid items to rebind
+                            grid.dataSource.success(data);
+
+
+                            }
+                        });
                 },
                 clear: function(ev) {
                     validationSuccess.html("");
