@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://kendo.cdn.telerik.com/2021.3.1207/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="https://kendo.cdn.telerik.com/2021.3.1207/styles/kendo.default.min.css" rel="stylesheet" />
+    <script src="https://kendo.cdn.telerik.com/2021.3.1207/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2021.3.1207/js/kendo.all.min.js"></script>
+</head>
+<body>
+<div id="example" style="
+    width: 400px;
+    width: 200;
+    margin: auto;>
+    <div class="demo-section k-content">
+        <div id="validation-success"></div>
+
+        <form id="exampleform"></form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var validationSuccess = $("#validation-success");
+
+            $("#exampleform").kendoForm({
+                orientation: "vertical",
+                formData: {
+                    PlateNumber: "34KLM201",
+                    Weight: "150 Kg",
+                    Height: "120 Cm",
+                    Birth: new Date(),
+                    Agree: false
+                },
+                items: [{
+                    type: "group",
+                    label: "Vecile Accepting Form",
+                    items: [
+                        { field: "PlateNumber", label: "Plate Number:", validation: { required: true } },
+                        { field: "Weight", label: "Weight:", validation: { required: true, email: true } },
+                        { field: "Height", label: "Height:", validation: { required: true, email: true } },
+                        {
+                            field: "Password",
+                            label: "Password:",
+                            validation: { required: true },
+                            hint: "Hint: enter alphanumeric characters only.",
+                            editor: function(container, options) {
+                                container.append($("<input type='password' class='k-textbox k-valid' id='Password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:Password' aria-describedby='Password-form-hint'>"));
+                            }
+                        },
+                        { field: "Birth", label: { text: "Date of birth:", optional: true } },
+                        { field: "Agree", label: "Agree to Terms:", validation: { required: true } }
+                    ]
+                }],
+                validateField: function(e) {
+                    validationSuccess.html("");
+                },
+                submit: function(e) {
+                    e.preventDefault();
+                    validationSuccess.html("<div class='k-messagebox k-messagebox-success'>Form data is valid!</div>");
+                },
+                clear: function(ev) {
+                    validationSuccess.html("");
+                }
+            });
+        });
+    </script>
+</div>
+
+
+
+
+</body>
+</html>
