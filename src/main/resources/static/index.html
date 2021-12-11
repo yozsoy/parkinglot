@@ -18,7 +18,7 @@
 
         <form id="exampleform"></form>
     </div>
-
+    <div id="dialog">
     <script>
         $(document).ready(function () {
             var validationSuccess = $("#validation-success");
@@ -29,7 +29,8 @@
                     PlateNumber: "34KLM201",
                     Weight: "150",
                     Height: "120",
-                    Agree: false
+                    Agree: false,
+                    Size: "SMALL"
                 },
                 items: [{
                     type: "group",
@@ -39,19 +40,18 @@
                         { field: "Weight", label: "Weight (KG):", validation: { required: true} },
                         { field: "Height", label: "Height (CM):", validation: { required: true} },
                         {
-                            field: "size",
+                            field: "Size",
                             editor: "DropDownList",
                             label: "Vehicle Size",
                             validation: { required: true },
                             editorOptions:
                                 {
-                                    optionLabel: "Select size...",
                                     dataSource: [
-                                        { Name: "Small"},
-                                        { Name: "Big"}
+                                        { Name: "Small", Id: "SMALL"},
+                                        { Name: "Big", Id: "BIG"}
                                     ],
                                     dataTextField: "Name",
-                                    dataValueField: "Name"
+                                    dataValueField: "Id"
                                 }
                         },
                         { field: "Agree", label: "Agree to Terms:", validation: { required: true } }
@@ -62,7 +62,7 @@
                 },
                 submit: function(e) {
                     e.preventDefault();
-                    validationSuccess.html("<div class='k-messagebox k-messagebox-success'>Form data is valid!</div>");
+                    validationSuccess.html("<div class='k-messagebox k-messagebox-success'>Form submitted.</div>");
 
 
                     $.ajax({
@@ -71,9 +71,18 @@
                         data: e.model,
                         success: function (data) {
                             //data is array of grid items to rebind
-                            grid.dataSource.success(data);
-
-
+                            //grid.dataSource.success(data);
+                            var dialog = $('#dialog');
+                            dialog.kendoDialog({
+                                    width: "450px",
+                                    title: "Software Update",
+                                    closable: false,
+                                    modal: false,
+                                    content: "<p>A new version of <strong>Kendo UI</strong> is available. Would you like to download and install it now?<p>",
+                                    actions: [
+                                        { text: 'Install update', primary: true }
+                                    ]
+                                });
                             }
                         });
                 },

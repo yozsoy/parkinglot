@@ -8,6 +8,7 @@ public class Spot extends BaseEntity{
     private int floorNumber;
     private int spotXCoordinate;
     private int spotYCoordinate;
+    private double weight;
     private SpotType spotType;//small or large
     private String licensePlateNumber;
 }
