@@ -22,7 +22,20 @@
     <script>
         $(document).ready(function () {
             var validationSuccess = $("#validation-success");
-
+            function ordinal_suffix_of(i) {
+                var j = i % 10,
+                    k = i % 100;
+                if (j == 1 && k != 11) {
+                    return i + "st";
+                }
+                if (j == 2 && k != 12) {
+                    return i + "nd";
+                }
+                if (j == 3 && k != 13) {
+                    return i + "rd";
+                }
+                return i + "th";
+            }
 
 
             $("#exampleform").kendoForm({
@@ -36,7 +49,7 @@
                 },
                 items: [{
                     type: "group",
-                    label: "Vehicle Accepting Form",
+                    label: "Vehicle Enter-Exit Form",
                     items: [
                         { field: "PlateNumber", label: "Plate Number:", validation: { required: true } },
                         { field: "Weight", label: "Weight (KG):", validation: { required: true} },
@@ -75,14 +88,23 @@
                             //data is array of grid items to rebind
                             //grid.dataSource.success(data);
                             var dialog = $('#dialog');
+                            var content;
+                            if(data.exit){
+                                content = "The price of your parking is " + data.price;
+                            }
+                            else{
+                                content = data.xcoordinate + "-" + ordinal_suffix_of(data.ycoordinate);
+                                content = content + " field is reserved for you in the "
+                                + ordinal_suffix_of(data.floor) + " floor.";
+                            }
                             dialog.kendoDialog({
                                     width: "450px",
-                                    title: "Software Update",
+                                    title: data.title,
                                     closable: false,
                                     modal: false,
-                                    content: "<p>A new version of <strong>Kendo UI</strong> is available. Would you like to download and install it now?<p>",
+                                    content: content,
                                     actions: [
-                                        { text: 'Install update', primary: true }
+                                        { text: 'OK', primary: true }
                                     ],
                                     close:  function(e) {
                                         $('#dialog').removeClass();

@@ -6,4 +6,8 @@ import lombok.Data;
 public class Allocation {
     private int xCoordinate;
     private int yCoordinate;
+    private int floor;
+    private String title;
+    private double price;
+    private boolean isExit;
 }
