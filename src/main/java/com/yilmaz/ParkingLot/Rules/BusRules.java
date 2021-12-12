@@ -48,6 +48,7 @@ public class BusRules extends Rules {
                     //save the second spot
                     allocation.setYCoordinate(yNumber);
                     saveSpot(vehicle, allocation);
+
                     String message = "Fields " + xNumber + "-" + getSuffix(yNumber)
                             + " and " + xNumber + "-" + getSuffix(yNumber+1)
                             + " are reserved for you in the " +  getSuffix(floorNumber) + " floor! :)";
@@ -58,6 +59,7 @@ public class BusRules extends Rules {
             }
         }
 
+        // no suitable spot
         return null;
     }
 
