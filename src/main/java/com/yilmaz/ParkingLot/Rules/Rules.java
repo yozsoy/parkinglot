@@ -1,8 +1,10 @@
 package com.yilmaz.ParkingLot.Rules;
 
+import com.yilmaz.ParkingLot.Data.Services.SpotService;
 import com.yilmaz.ParkingLot.Model.Allocation;
 import com.yilmaz.ParkingLot.Model.Spot;
 import com.yilmaz.ParkingLot.Model.Vehicle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashSet;
@@ -26,11 +28,21 @@ public abstract class Rules {
     @Value("${parking.lot.length}")
     private int parkingLotY;
 
-    public abstract Allocation leaveOperation(Set<Spot> existingSpots);
+    @Autowired
+    SpotService spotService;
 
-    public abstract Allocation findBestSpot(Set<Spot> allFilledSpots, Vehicle vehicle, int floorNumber);
+    protected abstract Allocation leaveOperation(Vehicle vehicle, Set<Spot> existingSpots);
+    protected abstract Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber);
+    public final Allocation run(Vehicle vehicle){
+        Set<Spot> existingSpots = findByPlateNo(spotService.findAll(), vehicle.getPlateNumber());
+        if(existingSpots.size() != 0)
+            return leaveOperation(vehicle, existingSpots);
+        else
+            return findBestEmptySpot(existingSpots, vehicle);
 
-    public final Allocation findBestEmptySpot(Set<Spot> allFilledSpots, Vehicle vehicle){
+    }
+
+    protected final Allocation findBestEmptySpot(Set<Spot> allFilledSpots, Vehicle vehicle){
         for(int floorNumber = 0; floorNumber<numberOfFloors; floorNumber++){
             Set<Spot> spotsInTheFloor = findByFloor(allFilledSpots, floorNumber);
 
@@ -42,7 +54,7 @@ public abstract class Rules {
             if(!doesFloorSatisfyHeightRequirement(vehicle, floorNumber))
                 continue;
 
-            Allocation allocation = findBestSpot(allFilledSpots, vehicle, floorNumber);
+            Allocation allocation = findBestSpotInGivenFloor(allFilledSpots, vehicle, floorNumber);
             return allocation;
         }
         return null;
@@ -80,4 +92,13 @@ public abstract class Rules {
         return null;
     }
 
+    //find spots filled given plate no
+    protected Set<Spot> findByPlateNo(Set<Spot> allFilledSpots, String plateNo){
+        Set<Spot> res = new HashSet<Spot>();
+        for(Spot s: allFilledSpots) {
+            if (Objects.equals(s.getLicensePlateNumber(), plateNo))
+                res.add(s);
+        }
+        return res;
+    }
 }

@@ -28,7 +28,7 @@ public class BusRules extends Rules {
     }
 
     @Override
-    public Allocation findBestSpot(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){
+    public Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){
         Allocation allocation = new Allocation();
 
         for(int xNumber = 1; xNumber <= parkingLotX; xNumber++){
@@ -39,6 +39,10 @@ public class BusRules extends Rules {
                     allocation.setYCoordinate(yNumber);
                     allocation.setXCoordinate(xNumber);
                     allocation.setFloor(floorNumber);
+                    allocation.setTitle("We have vacancy!");
+
+                    //save registration
+                    saveSpot(vehicle, allocation);
                     return allocation;
                 }
             }
@@ -48,7 +52,9 @@ public class BusRules extends Rules {
     }
 
     @Override
-    public Allocation leaveOperation(Set<Spot> existingSpots){
+    protected Allocation leaveOperation(Vehicle vehicle, Set<Spot> existingSpots){
+        if(existingSpots.size() == 0)
+            return null;
         double price = 0;
         long milis = System.currentTimeMillis();
         for(Spot existingSpot: existingSpots){
@@ -61,5 +67,16 @@ public class BusRules extends Rules {
         allocation.setTitle("We have already missed you! :(");
         allocation.setExit(true);
         return allocation;
+    }
+    private void saveSpot(Vehicle vehicle, Allocation allocation){
+        Spot spot = new Spot();
+        spot.setWeight(vehicle.getWeight());
+        spot.setLicensePlateNumber(vehicle.getPlateNumber());
+        spot.setSpotType(vehicle.getSize());
+        spot.setSpotYCoordinate(allocation.getYCoordinate());
+        spot.setSpotXCoordinate(allocation.getXCoordinate());
+        spot.setFloorNumber(allocation.getFloor());
+        spot.setEnterDate(System.currentTimeMillis());
+        spotService.save(spot);
     }
 }
