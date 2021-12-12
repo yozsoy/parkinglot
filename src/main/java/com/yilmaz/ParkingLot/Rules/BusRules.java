@@ -72,6 +72,7 @@ public class BusRules extends Rules {
         spot.setEnterDate(System.currentTimeMillis());
         spotService.save(spot);
     }
+
     private String getSuffix(int i){
         int j = i % 10;
         int k = i % 100;
