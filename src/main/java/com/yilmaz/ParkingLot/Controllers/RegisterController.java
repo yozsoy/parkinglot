@@ -29,9 +29,6 @@ public class RegisterController {
     @Value("${price.per.minute}")
     private double pricePerMinute;
 
-    @Value("${initial.price}")
-    private double initialPrice;
-
     @Value("${weight.capacity.per.floor}")
     private int[] weightCapacitiesOfTheFloors;
 
@@ -85,6 +82,7 @@ public class RegisterController {
         return spots;
     }
 
+    //find spots among given set of floors given floor number
     private Set<Spot> findByFloor(Set<Spot> elems, int floorNumber){
         Set<Spot> result = new HashSet<Spot>();
         for(Spot s: elems)
@@ -92,6 +90,8 @@ public class RegisterController {
                 result.add(s);
         return result;
     }
+
+    //find spot given specific coordinates
     private Spot findByCoordinates(Set<Spot> elems, int x, int y){
         for(Spot s: elems) {
             if (s.getSpotXCoordinate() == x && s.getSpotYCoordinate() == y)
@@ -99,6 +99,8 @@ public class RegisterController {
         }
         return null;
     }
+
+    //find spot filled by given plate no
     private Set<Spot> findByPlateNo(Set<Spot> allFilledSpots, String plateNo){
         Set<Spot> res = new HashSet<Spot>();
         for(Spot s: allFilledSpots) {
@@ -107,6 +109,8 @@ public class RegisterController {
         }
         return res;
     }
+
+
     private Allocation findBestEmptySpot(Set<Spot> allFilledSpots, Vehicle vehicle){
         for(int floorNumber = 0; floorNumber<numberOfFloors; floorNumber++){
             Set<Spot> spotsInTheFloor = findByFloor(allFilledSpots, floorNumber);
@@ -135,6 +139,8 @@ public class RegisterController {
         }
         return null;
     }
+
+
     private boolean doesFloorSatisfyWeightRequirement(Vehicle incomingVehicle, Set<Spot> existingSpots, int floorNumber){
         double remainingWeight = weightCapacitiesOfTheFloors[floorNumber] - incomingVehicle.getWeight();
         for(Spot spot: existingSpots){
@@ -142,6 +148,7 @@ public class RegisterController {
         }
         return remainingWeight > 0;
     }
+
     private boolean doesFloorSatisfyHeightRequirement(Vehicle incomingVehicle, int floorNumber){
         return heightsOfTheFloors[floorNumber] > incomingVehicle.getHeight();
     }

@@ -3,8 +3,6 @@ package com.yilmaz.ParkingLot.Model;
 import com.yilmaz.ParkingLot.Enums.SpotType;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class Vehicle {
     private String plateNumber;
