@@ -30,11 +30,9 @@ public class RegisterController {
 
     @GetMapping("/register")
     public Allocation registerVehicle(Vehicle vehicle){
-        Allocation allocation;
-
 
         Rules rule = ruleFactory.get(vehicle);
-        allocation = rule.run(vehicle);
+        Allocation allocation = rule.run(vehicle);
         if(allocation == null){
             throw new RuntimeException("We don't have vacancy! :(");
         }

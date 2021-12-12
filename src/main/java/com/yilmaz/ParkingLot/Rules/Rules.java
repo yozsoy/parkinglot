@@ -32,12 +32,11 @@ public abstract class Rules {
     @Value("${parking.lot.length}")
     private int parkingLotY;
 
+    @Value("${price.per.minute}")
+    private double pricePerMinute;
+
     @Autowired
     SpotService spotService;
-
-    protected abstract Allocation leaveOperation(Vehicle vehicle, Set<Spot> existingSpots);
-
-    protected abstract Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber);
 
     public final Allocation run(Vehicle vehicle){
         Set<Spot> spots = spotService.findAll();
@@ -47,6 +46,35 @@ public abstract class Rules {
         else
             return findBestEmptySpot(vehicle, spots);
 
+    }
+
+    // override if needed
+    protected double calculatePrice(Set<Spot> existingSpots){
+        double price = 0;
+        long milis = System.currentTimeMillis();
+        for(Spot existingSpot: existingSpots){
+            long minutes = ((milis - existingSpot.getEnterDate()) / 1000);// / 60
+            price += minutes * pricePerMinute;
+        }
+        return price;
+    }
+
+    protected abstract Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber);
+
+    protected final Allocation leaveOperation(Vehicle vehicle, Set<Spot> existingSpots){
+        double price = calculatePrice(existingSpots);
+
+        //delete spots
+        for(Spot existingSpot: existingSpots){
+            spotService.delete(existingSpot);
+        }
+
+        //create result
+        Allocation allocation = new Allocation();
+        allocation.setPrice(price);
+        allocation.setTitle("We have already missed you! :(");
+        allocation.setExit(true);
+        return allocation;
     }
 
     protected final Allocation findBestEmptySpot(Vehicle vehicle, Set<Spot> allFilledSpots){
@@ -86,7 +114,7 @@ public abstract class Rules {
     }
 
     //find spots among given set of floors given floor number
-    private Set<Spot> findByFloor(Set<Spot> elems, int floorNumber){
+    private final Set<Spot> findByFloor(Set<Spot> elems, int floorNumber){
         Set<Spot> result = new HashSet<Spot>();
         for(Spot s: elems)
             if(s.getFloorNumber() == floorNumber)
@@ -95,7 +123,7 @@ public abstract class Rules {
     }
 
     //find spot given specific coordinates
-    protected Spot findByCoordinates(Set<Spot> elems, int x, int y){
+    protected final Spot findByCoordinates(Set<Spot> elems, int x, int y){
         for(Spot s: elems) {
             if (s.getSpotXCoordinate() == x && s.getSpotYCoordinate() == y)
                 return s;
@@ -104,7 +132,7 @@ public abstract class Rules {
     }
 
     //find spots filled given plate no
-    protected Set<Spot> findByPlateNo(Set<Spot> allFilledSpots, String plateNo){
+    protected final Set<Spot> findByPlateNo(Set<Spot> allFilledSpots, String plateNo){
         Set<Spot> res = new HashSet<Spot>();
         for(Spot s: allFilledSpots) {
             if (Objects.equals(s.getLicensePlateNumber(), plateNo))

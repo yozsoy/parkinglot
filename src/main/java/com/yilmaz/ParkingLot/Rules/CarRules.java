@@ -19,9 +19,6 @@ public class CarRules extends Rules {
     @Value("${parking.lot.length}")
     private int parkingLotY;
 
-    @Value("${price.per.minute}")
-    private double pricePerMinute;
-
     @Autowired
     SpotService spotService;
 
@@ -49,21 +46,6 @@ public class CarRules extends Rules {
         return null;
     }
 
-    @Override
-    protected Allocation leaveOperation(Vehicle vehicle, Set<Spot> existingSpots){
-        double price = 0;
-        long milis = System.currentTimeMillis();
-        for(Spot existingSpot: existingSpots){
-            long minutes = ((milis - existingSpot.getEnterDate()) / 1000);// / 60
-            price += minutes * pricePerMinute;
-            spotService.delete(existingSpot);
-        }
-        Allocation allocation = new Allocation();
-        allocation.setPrice(price);
-        allocation.setTitle("We have already missed you! :(");
-        allocation.setExit(true);
-        return allocation;
-    }
     private void saveSpot(Vehicle vehicle, Allocation allocation){
         Spot spot = new Spot();
         spot.setWeight(vehicle.getWeight());

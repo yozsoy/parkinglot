@@ -93,9 +93,14 @@
                                 content = "The price of your parking is " + data.price;
                             }
                             else{
-                                content = data.xcoordinate + "-" + ordinal_suffix_of(data.ycoordinate);
-                                content = content + " field is reserved for you in the "
-                                + ordinal_suffix_of(data.floor) + " floor.";
+                                if(data.message == null){
+                                    content = data.xcoordinate + "-" + ordinal_suffix_of(data.ycoordinate);
+                                    content = content + " field is reserved for you in the "
+                                    + ordinal_suffix_of(data.floor) + " floor.";
+                                }
+                                else{
+                                    content = data.message;
+                                }
                             }
                             dialog.kendoDialog({
                                     width: "450px",

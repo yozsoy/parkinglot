@@ -10,4 +10,5 @@ public class Allocation {
     private String title;
     private double price;
     private boolean isExit;
+    private String message;
 }
