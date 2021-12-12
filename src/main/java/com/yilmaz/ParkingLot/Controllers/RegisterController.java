@@ -56,7 +56,7 @@ public class RegisterController {
             double price = 0;
             long milis = System.currentTimeMillis();
             for(Spot existingSpot: existingSpots){
-                long minutes = ((milis - existingSpot.getEnterDate()) / 1000);
+                long minutes = ((milis - existingSpot.getEnterDate()) / 1000);// / 60
                 price += minutes * pricePerMinute;
                 spotService.delete(existingSpot);
             }
