@@ -66,7 +66,7 @@ public class RegisterController {
             allocation.setExit(true);
             return allocation;
         }
-        allocation = findEmptySpot(spots, vehicle);
+        allocation = findBestEmptySpot(spots, vehicle);
         if(allocation == null){
             throw new RuntimeException("We don't have vacancy! :(");
         }
@@ -107,7 +107,7 @@ public class RegisterController {
         }
         return res;
     }
-    private Allocation findEmptySpot(Set<Spot> allFilledSpots, Vehicle vehicle){
+    private Allocation findBestEmptySpot(Set<Spot> allFilledSpots, Vehicle vehicle){
         for(int floorNumber = 0; floorNumber<numberOfFloors; floorNumber++){
             Set<Spot> spotsInTheFloor = findByFloor(allFilledSpots, floorNumber);
 
