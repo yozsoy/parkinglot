@@ -4,6 +4,7 @@ import com.yilmaz.ParkingLot.Data.Services.SpotService;
 import com.yilmaz.ParkingLot.Model.Allocation;
 import com.yilmaz.ParkingLot.Model.Spot;
 import com.yilmaz.ParkingLot.Model.Vehicle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,11 +22,8 @@ public class CarRules extends Rules {
     @Value("${price.per.minute}")
     private double pricePerMinute;
 
+    @Autowired
     SpotService spotService;
-
-    CarRules(SpotService spotService){
-        this.spotService = spotService;
-    }
 
     @Override
     public Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){

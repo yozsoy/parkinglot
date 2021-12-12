@@ -4,6 +4,8 @@ import com.yilmaz.ParkingLot.Data.Services.SpotService;
 import com.yilmaz.ParkingLot.Model.Allocation;
 import com.yilmaz.ParkingLot.Model.Spot;
 import com.yilmaz.ParkingLot.Model.Vehicle;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -11,6 +13,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
 public abstract class Rules {
 
     @Value("${parking.lot.number.of.floors}")
@@ -32,17 +36,20 @@ public abstract class Rules {
     SpotService spotService;
 
     protected abstract Allocation leaveOperation(Vehicle vehicle, Set<Spot> existingSpots);
+
     protected abstract Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber);
+
     public final Allocation run(Vehicle vehicle){
-        Set<Spot> existingSpots = findByPlateNo(spotService.findAll(), vehicle.getPlateNumber());
+        Set<Spot> spots = spotService.findAll();
+        Set<Spot> existingSpots = findByPlateNo(spots, vehicle.getPlateNumber());
         if(existingSpots.size() != 0)
             return leaveOperation(vehicle, existingSpots);
         else
-            return findBestEmptySpot(existingSpots, vehicle);
+            return findBestEmptySpot(vehicle, spots);
 
     }
 
-    protected final Allocation findBestEmptySpot(Set<Spot> allFilledSpots, Vehicle vehicle){
+    protected final Allocation findBestEmptySpot(Vehicle vehicle, Set<Spot> allFilledSpots){
         for(int floorNumber = 0; floorNumber<numberOfFloors; floorNumber++){
             Set<Spot> spotsInTheFloor = findByFloor(allFilledSpots, floorNumber);
 
@@ -54,7 +61,11 @@ public abstract class Rules {
             if(!doesFloorSatisfyHeightRequirement(vehicle, floorNumber))
                 continue;
 
-            Allocation allocation = findBestSpotInGivenFloor(allFilledSpots, vehicle, floorNumber);
+            Allocation allocation = findBestSpotInGivenFloor(spotsInTheFloor, vehicle, floorNumber);
+
+            if(allocation == null)
+                continue;
+
             return allocation;
         }
         return null;
