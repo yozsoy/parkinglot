@@ -1,6 +1,5 @@
 package com.yilmaz.ParkingLot.Rules;
 
-import com.yilmaz.ParkingLot.Enums.VehicleType;
 import com.yilmaz.ParkingLot.Model.Vehicle;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -14,8 +13,8 @@ public class RuleFactory {
         this.ctx = ctx;
     }
 
-    public Rules get(Vehicle vehicle){
-        Rules rules = (Rules)ctx.getBean(vehicle.getVehicleType().getRuleClass());
+    public AbstractRules get(Vehicle vehicle){
+        AbstractRules rules = (AbstractRules)ctx.getBean(vehicle.getVehicleType().getRuleClass());
         return rules;
     }
 }

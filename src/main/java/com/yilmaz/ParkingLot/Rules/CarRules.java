@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 @Component
-public class CarRules extends Rules {
+public class CarRules extends AbstractRules {
 
     @Value("${parking.lot.width}")
     private int parkingLotX;
@@ -23,14 +23,13 @@ public class CarRules extends Rules {
     SpotService spotService;
 
     @Override
-    public Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){
-        Allocation allocation = new Allocation();
+    public Allocation registerBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){
 
         for(int xNumber = 1; xNumber <= parkingLotX; xNumber++){
             for(int yNumber = 1; yNumber <= parkingLotY; yNumber++){
                 Spot filledSpot = findByCoordinates(spotsInTheFloor, xNumber, yNumber);
                 if(filledSpot == null){
-                    allocation = new Allocation();
+                    Allocation allocation = new Allocation();
                     allocation.setYCoordinate(yNumber);
                     allocation.setXCoordinate(xNumber);
                     allocation.setFloor(floorNumber);

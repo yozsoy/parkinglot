@@ -11,7 +11,7 @@ import java.util.Set;
 
 
 @Component
-public class BusRules extends Rules {
+public class BusRules extends AbstractRules {
     @Value("${parking.lot.width}")
     private int parkingLotX;
 
@@ -28,15 +28,14 @@ public class BusRules extends Rules {
     }
 
     @Override
-    public Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){
-        Allocation allocation = new Allocation();
+    public Allocation registerBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){
 
         for(int xNumber = 1; xNumber <= parkingLotX; xNumber++){
             for(int yNumber = 1; yNumber <= parkingLotY - 1; yNumber++){
                 Spot filledSpot = findByCoordinates(spotsInTheFloor, xNumber, yNumber);
                 Spot nextFilledSpot = findByCoordinates(spotsInTheFloor, xNumber, yNumber + 1);
                 if(filledSpot == null && nextFilledSpot == null){
-                    allocation = new Allocation();
+                    Allocation allocation = new Allocation();
                     allocation.setYCoordinate(yNumber + 1);
                     allocation.setXCoordinate(xNumber);
                     allocation.setFloor(floorNumber);
@@ -58,7 +57,6 @@ public class BusRules extends Rules {
                 }
             }
         }
-
         // no suitable spot
         return null;
     }

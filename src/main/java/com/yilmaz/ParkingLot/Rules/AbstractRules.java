@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public abstract class Rules {
+public abstract class AbstractRules {
 
     @Value("${parking.lot.number.of.floors}")
     private int numberOfFloors;
@@ -38,7 +38,7 @@ public abstract class Rules {
     @Autowired
     SpotService spotService;
 
-    protected abstract Allocation findBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber);
+    protected abstract Allocation registerBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber);
 
     public final Allocation run(Vehicle vehicle){
         Set<Spot> spots = spotService.findAll();
@@ -46,7 +46,7 @@ public abstract class Rules {
         if(existingSpots.size() != 0)
             return leaveOperation(vehicle, existingSpots);
         else
-            return findBestEmptySpot(vehicle, spots);
+            return registerOperation(vehicle, spots);
 
     }
 
@@ -80,7 +80,7 @@ public abstract class Rules {
         return res;
     }
 
-    private final Allocation findBestEmptySpot(Vehicle vehicle, Set<Spot> allFilledSpots){
+    private final Allocation registerOperation(Vehicle vehicle, Set<Spot> allFilledSpots){
         for(int floorNumber = 0; floorNumber<numberOfFloors; floorNumber++){
             Set<Spot> spotsInTheFloor = findByFloor(allFilledSpots, floorNumber);
 
@@ -92,7 +92,7 @@ public abstract class Rules {
             if(!doesFloorSatisfyHeightRequirement(vehicle, floorNumber))
                 continue;
 
-            Allocation allocation = findBestSpotInGivenFloor(spotsInTheFloor, vehicle, floorNumber);
+            Allocation allocation = registerBestSpotInGivenFloor(spotsInTheFloor, vehicle, floorNumber);
 
             if(allocation == null)
                 continue;

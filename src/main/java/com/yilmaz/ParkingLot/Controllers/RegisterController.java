@@ -5,13 +5,11 @@ import com.yilmaz.ParkingLot.Model.Allocation;
 import com.yilmaz.ParkingLot.Model.Spot;
 import com.yilmaz.ParkingLot.Model.Vehicle;
 import com.yilmaz.ParkingLot.Rules.RuleFactory;
-import com.yilmaz.ParkingLot.Rules.Rules;
+import com.yilmaz.ParkingLot.Rules.AbstractRules;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -30,8 +28,7 @@ public class RegisterController {
 
     @GetMapping("/register")
     public Allocation registerVehicle(Vehicle vehicle){
-
-        Rules rule = ruleFactory.get(vehicle);
+        AbstractRules rule = ruleFactory.get(vehicle);
         Allocation allocation = rule.run(vehicle);
         if(allocation == null){
             throw new RuntimeException("We don't have vacancy! :(");
