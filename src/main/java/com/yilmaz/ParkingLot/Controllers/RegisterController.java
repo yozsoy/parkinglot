@@ -142,7 +142,6 @@ public class RegisterController {
         }
         return remainingWeight > 0;
     }
-
     private boolean doesFloorSatisfyHeightRequirement(Vehicle incomingVehicle, int floorNumber){
         return heightsOfTheFloors[floorNumber] > incomingVehicle.getHeight();
     }
