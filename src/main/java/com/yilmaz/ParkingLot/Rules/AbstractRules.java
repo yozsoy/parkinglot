@@ -94,6 +94,7 @@ public abstract class AbstractRules {
 
             Allocation allocation = registerBestSpotInGivenFloor(spotsInTheFloor, vehicle, floorNumber);
 
+            //search next floor
             if(allocation == null)
                 continue;
 
