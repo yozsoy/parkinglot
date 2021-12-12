@@ -45,7 +45,7 @@
                     Weight: "150",
                     Height: "120",
                     Agree: false,
-                    Size: "SMALL"
+                    VehicleType: "CAR"
                 },
                 items: [{
                     type: "group",
@@ -55,15 +55,15 @@
                         { field: "Weight", label: "Weight (KG):", validation: { required: true} },
                         { field: "Height", label: "Height (CM):", validation: { required: true} },
                         {
-                            field: "Size",
+                            field: "VehicleType",
                             editor: "DropDownList",
-                            label: "Vehicle Size",
+                            label: "Vehicle Type",
                             validation: { required: true },
                             editorOptions:
                                 {
                                     dataSource: [
-                                        { Name: "Small", Id: "SMALL"},
-                                        { Name: "Big", Id: "BIG"}
+                                        { Name: "Car", Id: "CAR"},
+                                        { Name: "Bus", Id: "BUS"}
                                     ],
                                     dataTextField: "Name",
                                     dataValueField: "Id"
