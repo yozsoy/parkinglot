@@ -44,7 +44,7 @@ public abstract class AbstractRules {
         Set<Spot> spots = spotService.findAll();
         Set<Spot> existingSpots = findByPlateNo(spots, vehicle.getPlateNumber());
         if(existingSpots.size() != 0)
-            return leaveOperation(vehicle, existingSpots);
+            return leaveOperation(existingSpots);
         else
             return registerOperation(vehicle, spots);
 
@@ -103,7 +103,7 @@ public abstract class AbstractRules {
         return null;
     }
 
-    private final Allocation leaveOperation(Vehicle vehicle, Set<Spot> existingSpots){
+    private final Allocation leaveOperation(Set<Spot> existingSpots){
         double price = calculatePrice(existingSpots);
 
         //delete spots
