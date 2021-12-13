@@ -7,9 +7,9 @@ import java.util.Set;
 
 public interface SpotService extends  CrudService<Spot, Long>{
 
-    //find spots filled given plate no
+    //find spots given plate no
     Set<Spot> findByPlateNo(String plateNo);
 
-    //find spots among given set of floors given floor number
+    //find spots given floor number
     Set<Spot> findByFloor(int floorNumber);
 }
