@@ -41,12 +41,11 @@ public abstract class AbstractRules {
     protected abstract Allocation registerBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber);
 
     public final Allocation run(Vehicle vehicle){
-        Set<Spot> spots = spotService.findAll();
-        Set<Spot> existingSpots = findByPlateNo(spots, vehicle.getPlateNumber());
+        Set<Spot> existingSpots = spotService.findByPlateNo(vehicle.getPlateNumber());
         if(existingSpots.size() != 0)
             return leaveOperation(existingSpots);
         else
-            return registerOperation(vehicle, spots);
+            return registerOperation(vehicle);
 
     }
 
@@ -70,19 +69,9 @@ public abstract class AbstractRules {
         return null;
     }
 
-    //find spots filled given plate no
-    protected final Set<Spot> findByPlateNo(Set<Spot> allFilledSpots, String plateNo){
-        Set<Spot> res = new HashSet<Spot>();
-        for(Spot s: allFilledSpots) {
-            if (Objects.equals(s.getLicensePlateNumber(), plateNo))
-                res.add(s);
-        }
-        return res;
-    }
-
-    private final Allocation registerOperation(Vehicle vehicle, Set<Spot> allFilledSpots){
+    private final Allocation registerOperation(Vehicle vehicle){
         for(int floorNumber = 0; floorNumber<numberOfFloors; floorNumber++){
-            Set<Spot> spotsInTheFloor = findByFloor(allFilledSpots, floorNumber);
+            Set<Spot> spotsInTheFloor = spotService.findByFloor(floorNumber);
 
             //check weight
             if(!doesFloorSatisfyWeightRequirement(vehicle, spotsInTheFloor, floorNumber))
@@ -131,14 +120,5 @@ public abstract class AbstractRules {
     // check height
     private final  boolean doesFloorSatisfyHeightRequirement(Vehicle incomingVehicle, int floorNumber){
         return heightsOfTheFloors[floorNumber] > incomingVehicle.getHeight();
-    }
-
-    //find spots among given set of floors given floor number
-    private final Set<Spot> findByFloor(Set<Spot> elems, int floorNumber){
-        Set<Spot> result = new HashSet<Spot>();
-        for(Spot s: elems)
-            if(s.getFloorNumber() == floorNumber)
-                result.add(s);
-        return result;
     }
 }

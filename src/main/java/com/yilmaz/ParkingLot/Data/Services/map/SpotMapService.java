@@ -5,6 +5,8 @@ import com.yilmaz.ParkingLot.Model.Spot;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -35,5 +37,28 @@ public class SpotMapService extends AbstractMapService<Spot, Long> implements Sp
     @Override
     public void deleteById(Long id) {
         super.deleteById(id);
+    }
+
+    //find spots filled given plate no
+    @Override
+    public Set<Spot> findByPlateNo(String plateNo){
+        Set<Spot> allFilledSpots = findAll();
+        Set<Spot> res = new HashSet<Spot>();
+        for(Spot s: allFilledSpots) {
+            if (Objects.equals(s.getLicensePlateNumber(), plateNo))
+                res.add(s);
+        }
+        return res;
+    }
+
+    //find spots among given set of floors given floor number
+    @Override
+    public final Set<Spot> findByFloor(int floorNumber){
+        Set<Spot> elems = findAll();
+        Set<Spot> result = new HashSet<Spot>();
+        for(Spot s: elems)
+            if(s.getFloorNumber() == floorNumber)
+                result.add(s);
+        return result;
     }
 }
