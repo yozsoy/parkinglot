@@ -13,15 +13,6 @@ import java.util.Set;
 @Component
 public class CarRules extends AbstractRules {
 
-    @Value("${parking.lot.width}")
-    private int parkingLotX;
-
-    @Value("${parking.lot.length}")
-    private int parkingLotY;
-
-    @Autowired
-    SpotService spotService;
-
     @Override
     public Allocation registerBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){
 

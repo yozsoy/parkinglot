@@ -12,20 +12,6 @@ import java.util.Set;
 
 @Component
 public class BusRules extends AbstractRules {
-    @Value("${parking.lot.width}")
-    private int parkingLotX;
-
-    @Value("${parking.lot.length}")
-    private int parkingLotY;
-
-    @Value("${price.per.minute}")
-    private double pricePerMinute;
-
-    SpotService spotService;
-
-    BusRules(SpotService spotService){
-        this.spotService = spotService;
-    }
 
     @Override
     public Allocation registerBestSpotInGivenFloor(Set<Spot> spotsInTheFloor, Vehicle vehicle, int floorNumber){

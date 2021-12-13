@@ -18,22 +18,22 @@ import java.util.Set;
 public abstract class AbstractRules {
 
     @Value("${parking.lot.number.of.floors}")
-    private int numberOfFloors;
+    protected int numberOfFloors;
 
     @Value("${height.of.the.floors}")
-    private int[] heightsOfTheFloors;
+    protected int[] heightsOfTheFloors;
 
     @Value("${weight.capacity.per.floor}")
-    private int[] weightCapacitiesOfTheFloors;
+    protected int[] weightCapacitiesOfTheFloors;
 
     @Value("${parking.lot.width}")
-    private int parkingLotX;
+    protected int parkingLotX;
 
     @Value("${parking.lot.length}")
-    private int parkingLotY;
+    protected int parkingLotY;
 
     @Value("${price.per.minute}")
-    private double pricePerMinute;
+    protected double pricePerMinute;
 
     @Autowired
     SpotService spotService;
